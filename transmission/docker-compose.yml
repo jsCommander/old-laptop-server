@@ -1,0 +1,22 @@
+---
+version: "2"
+services:
+  transmission:
+    image: linuxserver/transmission
+    container_name: transmission
+    environment:
+      - PUID=${TRANSMISSION_PUID}
+      - PGID=${TRANSMISSION_PGID}
+      - TZ=${TRANSMISSION_TZ}
+      - TRANSMISSION_WEB_HOME=${TRANSMISSION_WEB_HOME} #optional
+      - USER=${TRANSMISSION_USER} #optional
+      - PASS=${TRANSMISSION_PASS} #optional
+    volumes:
+      - ${TRANSMISSION_CONFIG_FOLDER}:/config
+      - ${TRANSMISSION_DOWNLOAD_FOLDER}:/downloads
+      - ${TRANSMISSION_WATCH_FOLDER}:/watch
+    ports:
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
+    restart: unless-stopped
