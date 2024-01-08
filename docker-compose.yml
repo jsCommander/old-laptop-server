@@ -5,10 +5,9 @@ services:
     image: linuxserver/transmission
     container_name: transmission
     environment:
-      - PUID=${TRANSMISSION_PUID}
-      - PGID=${TRANSMISSION_PGID}
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=${TRANSMISSION_TZ}
-      - TRANSMISSION_WEB_HOME=${TRANSMISSION_WEB_HOME} #optional
       - USER=${TRANSMISSION_USER} #optional
       - PASS=${TRANSMISSION_PASS} #optional
     volumes:
@@ -19,4 +18,19 @@ services:
       - 9091:9091
       - 51413:51413
       - 51413:51413/udp
+    restart: unless-stopped
+
+  plex:
+    image: linuxserver/plex
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - VERSION=docker
+      - UMASK_SET=022 #optional
+      - PLEX_CLAIM= #optional
+    volumes:
+      - ${PLEX_CONFIG_FOLDER}:/config
+      - ${PLEX_MOVIES_FOLDER}:/movies
     restart: unless-stopped

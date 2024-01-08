@@ -1,76 +1,62 @@
-# Медиа сервер из старого ноутбука
+# Media Server from an Old Laptop
 
-Старый ноутбук валяется дома без дела? Сделай из него модный сервак! Путем нехитрых манипуляций твой ноут сможет:
+Got an old laptop lying around at home? Turn it into a trendy server! With some simple manipulations, your laptop can:
 
-1. Качать и раздавать торренты
-2. Стримить фильмы на разные устройства
-3. Хранить документы и фотки на собственном облаке, аналог гугл диска. Теперь сотрудники гугла больше не увидят фото твоего члена (возможно это минус)
+1. Download and distribute torrents
+2. Stream movies to various devices
 
-Использованые репозитории:
+Used repositories:
 
 1. [docker-transmission](https://github.com/linuxserver/docker-transmission)
 2. [docker-plex](https://github.com/linuxserver/docker-plex)
-3. [docker-owncloud](https://github.com/owncloud-docker/server)
 
-## Установка
+## Installation
 
-### Пердварительная подготовка
-
-Ставим себе убунту сервер, желательно последний LTS
-
-1. Устанавливаем докер
+1. Install Docker
 
    ```bash
    sudo apt install docker.io
    ```
 
-2. Добавляем текущего юзера в группу docker, чтобы использовать его без sudo
+2. Add the current user to the docker group to use it without sudo
 
    ```bash
    sudo usermod -aG docker $USER
    ```
 
-3. Устанавливаем docker-compose
+3. Fill `.env` file
 
-   ```bash
-   sudo curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+   ```env
+   ROOT_PATH=/home/user/
+   TRANSMISSION_USER=someuser
+   TRANSMISSION_PASS=somepass
    ```
 
-4. Даем права на запуск docker-compose
+4. Start containers
 
    ```bash
-   sudo chmod +x /usr/local/bin/docker-compose
+   docker compose up -d
    ```
 
-### Lid-switch
+5. Check services:
+   - **transmission-web-client:** http://localhost:9091/
+   - **plex-web:** http://localhost:32400/web
 
-Чтобы ноут не отключался при закрытии крышки нужно игнорировать lid-switch.
-Открываем /etc/systemd/logind.conf в любом редакторе
+## Lid-switch
+
+To prevent the laptop from turning off when the lid is closed, ignore the lid-switch.
+Open /etc/systemd/logind.conf in any editor
 
 ```bash
 sudo vim /etc/systemd/logind.conf
 ```
 
-и создаем/редактируем там строку(у строки не должно быть символа коммента #)
+and create/edit the line there (the line should not have a comment symbol #)
 
 ` HandleLidSwitch=ignore
 
-Перезапускаем сервис
+Restart the service
 
 ```bash
 sudo systemctl restart systemd-logind
-```
-
-### Поднимаем контейнеры
-
-Нам нужно поднять три сервиса:
-
-1. transmission для торрентов
-2. plex для медиа сервиса
-3. owncloud для облака
-
-Заходим в соответствующие папки, редактируем .env под себя и запускаем
-
-```bash
-docker-compose up -d
 ```
