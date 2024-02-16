@@ -7,7 +7,7 @@ services:
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - TZ=${TRANSMISSION_TZ}
+      - TZ=${TZ}
       - USER=${TRANSMISSION_USER} #optional
       - PASS=${TRANSMISSION_PASS} #optional
     volumes:
@@ -20,17 +20,20 @@ services:
       - 51413:51413/udp
     restart: unless-stopped
 
-  plex:
-    image: linuxserver/plex
-    container_name: plex
-    network_mode: host
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - VERSION=docker
-      - UMASK_SET=022 #optional
-      - PLEX_CLAIM= #optional
+      - TZ=${TZ}
     volumes:
-      - ${PLEX_CONFIG_FOLDER}:/config
-      - ${PLEX_MOVIES_FOLDER}:/movies
+      - ${CONFIG_FOLDER}:/config
+      - ${MOVIES_FOLDER}:/data/movies
+      - ${MOVIES_FOLDER}:/data/tvshows
+    ports:
+      - 8096:8096
+      - 8920:8920 #optional
+      - 7359:7359/udp #optional
+      - 1900:1900/udp #optional
     restart: unless-stopped

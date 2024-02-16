@@ -8,7 +8,7 @@ Got an old laptop lying around at home? Turn it into a trendy server! With some 
 Used repositories:
 
 1. [docker-transmission](https://github.com/linuxserver/docker-transmission)
-2. [docker-plex](https://github.com/linuxserver/docker-plex)
+2. [docker-jellyfin](https://github.com/linuxserver/docker-jellyfin)
 
 ## Installation
 
@@ -30,6 +30,19 @@ Used repositories:
    ROOT_PATH=/home/user/
    TRANSMISSION_USER=someuser
    TRANSMISSION_PASS=somepass
+
+   PUID=1000
+   PGID=1000
+
+   # transmission
+   TRANSMISSION_ROOT_FOLDER=${ROOT_PATH}/transmission
+   TRANSMISSION_CONFIG_FOLDER=${TRANSMISSION_ROOT_FOLDER}/config
+   TRANSMISSION_DOWNLOAD_FOLDER=${TRANSMISSION_ROOT_FOLDER}/downloads
+   TRANSMISSION_WATCH_FOLDER=${TRANSMISSION_ROOT_FOLDER}/watch
+
+   # jellyfin
+   CONFIG_FOLDER=${ROOT_PATH}/jellyfin
+   MOVIES_FOLDER=${TRANSMISSION_DOWNLOAD_FOLDER}/complete
    ```
 
 4. Start containers
@@ -40,7 +53,7 @@ Used repositories:
 
 5. Check services:
    - **transmission-web-client:** http://localhost:9091/
-   - **plex-web:** http://localhost:32400/web
+   - **jellyfin-web:** http://localhost:8096
 
 ## Lid-switch
 
